@@ -1,0 +1,227 @@
+/* ═══════════════════════════════════════════════════════
+   TripPlanner — Original Centered Design + Carbon Inputs
+   ═══════════════════════════════════════════════════════ */
+
+.planner-page {
+    min-height: 100vh;
+    padding: 6rem 2rem 3rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e8edf5 100%);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.planner-container {
+    width: 100%;
+    max-width: 780px;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.planner-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.planner-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 0.75rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.planner-header h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.03em;
+}
+
+.planner-header p {
+    font-size: 1.05rem;
+    color: #64748b;
+}
+
+.planner-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.05),
+        0 20px 40px -12px rgba(0, 0, 0, 0.08);
+}
+
+.form-section {
+    margin-bottom: 1.75rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+}
+
+.form-row .form-section {
+    flex: 1;
+}
+
+.flex-1 {
+    flex: 1.5 !important;
+}
+
+.field-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+}
+
+/* Travel style cards — original design */
+.style-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.style-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 1.25rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.style-card:hover {
+    border-color: #c7d2fe;
+    background: #f5f3ff;
+    transform: translateY(-2px);
+}
+
+.style-card.active {
+    border-color: #4f46e5;
+    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+.style-icon {
+    font-size: 1.75rem;
+}
+
+.style-label {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #1e293b;
+}
+
+.style-desc {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    text-align: center;
+}
+
+/* Interest chips — original design */
+.interest-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.interest-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1.1rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 50px;
+    background: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.interest-chip:hover {
+    border-color: #c7d2fe;
+    background: #f5f3ff;
+    color: #4338ca;
+}
+
+.interest-chip.active {
+    border-color: #4f46e5;
+    background: #4f46e5;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+}
+
+/* Error */
+.form-error {
+    background: #fef2f2;
+    color: #dc2626;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    border: 1px solid #fecaca;
+}
+
+/* Submit button */
+.submit-btn {
+    width: 100%;
+    max-width: 100%;
+    justify-content: center;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 1.1rem !important;
+    font-weight: 700 !important;
+    font-size: 1.15rem !important;
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+    transition: all 0.3s ease !important;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4) !important;
+    background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%) !important;
+}
+
+.loading-indicator {
+    justify-content: center;
+    padding: 1rem 0;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+    .planner-page {
+        padding: 5rem 1rem 2rem;
+    }
+
+    .planner-card {
+        padding: 1.75rem 1.25rem;
+        border-radius: 18px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .style-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .planner-header h1 {
+        font-size: 1.75rem;
+    }
+}

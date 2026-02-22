@@ -1,0 +1,102 @@
+/* ═══════════════════════════════════════════════════════
+   Auth Pages — Original Glassmorphism Design
+   ═══════════════════════════════════════════════════════ */
+
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 2rem 3rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e8edf5 100%);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 440px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.05),
+        0 20px 40px -12px rgba(0, 0, 0, 0.08);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.auth-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.auth-subtitle {
+    font-size: 0.95rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+}
+
+.auth-form {
+    margin-bottom: 1rem;
+}
+
+.auth-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.auth-btn {
+    width: 100%;
+    max-width: 100%;
+    justify-content: center;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 0.9rem !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+    transition: all 0.3s ease !important;
+}
+
+.auth-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4) !important;
+    background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%) !important;
+}
+
+.auth-footer {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #4f46e5;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,117 @@
+@use '@carbon/react';
+
+/* ═══════════════════════════════════════════════════════
+   PlanIT Global Styles — Carbon + Original Design
+   ═══════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --planit-accent: #4f46e5;
+    --planit-accent-dark: #4338ca;
+    --planit-accent-light: #eef2ff;
+    --planit-bg: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e8edf5 100%);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f4f4f4;
+    color: #161616;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+#root {
+    position: relative;
+    z-index: 1;
+}
+
+/* Override Carbon defaults to match original design */
+.cds--header {
+    z-index: 100;
+}
+
+/* Make Carbon buttons use our purple accent */
+.cds--btn--primary {
+    background-color: var(--planit-accent) !important;
+    border-color: var(--planit-accent) !important;
+}
+
+.cds--btn--primary:hover {
+    background-color: var(--planit-accent-dark) !important;
+}
+
+/* Carbon text inputs — underline to rounded */
+.cds--text-input,
+.cds--password-input,
+.cds--number input[type="number"],
+.cds--date-picker__input {
+    border-radius: 10px !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-bottom: 1.5px solid #e2e8f0 !important;
+    background: #fff !important;
+    padding: 0.75rem 1rem !important;
+}
+
+.cds--text-input:focus,
+.cds--password-input:focus,
+.cds--number input[type="number"]:focus,
+.cds--date-picker__input:focus {
+    border-color: var(--planit-accent) !important;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15) !important;
+    outline: none !important;
+}
+
+/* Remove Carbon's bottom-border-only style */
+.cds--text-input__field-wrapper,
+.cds--number__input-wrapper {
+    border-bottom: none !important;
+}
+
+/* Carbon checkbox accent */
+.cds--checkbox:checked+.cds--checkbox-label .cds--checkbox-label-text::before {
+    background-color: var(--planit-accent) !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
