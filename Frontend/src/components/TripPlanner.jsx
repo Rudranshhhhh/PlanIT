@@ -5,16 +5,17 @@ import {
     DatePicker,
     DatePickerInput,
     Button,
-    Tag,
     InlineLoading,
+    ProgressIndicator,
+    ProgressStep,
 } from '@carbon/react';
-import { SendFilled } from '@carbon/icons-react';
+import { SendFilled, Location, Calendar, Wallet, Partnership, Explore } from '@carbon/icons-react';
 import './TripPlanner.css';
 
 const TRAVEL_STYLES = [
-    { id: 'budget', label: 'Budget', icon: '💰', desc: 'Hostels & street food' },
-    { id: 'moderate', label: 'Moderate', icon: '🏨', desc: 'Comfortable stays' },
-    { id: 'luxury', label: 'Luxury', icon: '✨', desc: 'Premium experiences' },
+    { id: 'budget', label: 'Budget', icon: '💰', desc: 'Hostels & street food', color: '#10b981' },
+    { id: 'moderate', label: 'Moderate', icon: '🏨', desc: 'Comfortable stays', color: '#4f46e5' },
+    { id: 'luxury', label: 'Luxury', icon: '✨', desc: 'Premium experiences', color: '#d97706' },
 ];
 
 const INTERESTS = [
@@ -89,23 +90,61 @@ const TripPlanner = ({ onPlanGenerated }) => {
         }
     };
 
+    // Progress calculation
+    const completedSteps = [
+        formData.destination.trim(),
+        formData.days > 0,
+        formData.budget,
+        formData.travel_style,
+    ].filter(Boolean).length;
+
     return (
         <div className="planner-page">
+            {/* Decorative background elements */}
+            <div className="planner-bg">
+                <div className="bg-orb bg-orb-1"></div>
+                <div className="bg-orb bg-orb-2"></div>
+                <div className="bg-grid"></div>
+            </div>
+
             <div className="planner-container">
+                {/* Header */}
                 <div className="planner-header">
-                    <span className="planner-icon">🗺️</span>
-                    <h1>Plan Your Dream Trip</h1>
-                    <p>Fill in the details and let AI craft the perfect itinerary for you</p>
+                    <div className="header-badge">
+                        <span>✈️</span> AI Trip Planner
+                    </div>
+                    <h1>Plan Your <span className="gradient-text">Dream Trip</span></h1>
+                    <p>Fill in the details below and our AI will craft a personalized itinerary just for you</p>
                 </div>
 
+                {/* Progress */}
+                <div className="planner-progress">
+                    <div className="progress-bar-track">
+                        <div
+                            className="progress-bar-fill"
+                            style={{ width: `${(completedSteps / 4) * 100}%` }}
+                        ></div>
+                    </div>
+                    <span className="progress-label">{completedSteps} of 4 steps completed</span>
+                </div>
+
+                {/* Form Card */}
                 <div className="planner-card">
                     <form onSubmit={handleSubmit}>
-                        {/* Destination */}
-                        <div className="form-section">
+
+                        {/* Step 1: Destination */}
+                        <div className="form-step">
+                            <div className="step-header">
+                                <div className="step-number">1</div>
+                                <div>
+                                    <h3>Destination</h3>
+                                    <p>Where would you like to explore?</p>
+                                </div>
+                            </div>
                             <TextInput
                                 id="destination"
-                                labelText="📍 Where do you want to go?"
-                                placeholder="e.g. Mumbai, Goa, Jaipur, Paris..."
+                                labelText=""
+                                placeholder="e.g. Mumbai, Goa, Jaipur, Tokyo, Paris..."
                                 value={formData.destination}
                                 onChange={(e) => updateField('destination', e.target.value)}
                                 size="lg"
@@ -115,64 +154,99 @@ const TripPlanner = ({ onPlanGenerated }) => {
                             />
                         </div>
 
-                        {/* Days + Date */}
-                        <div className="form-row">
-                            <div className="form-section">
-                                <NumberInput
-                                    id="days"
-                                    label="📅 Number of Days"
-                                    value={formData.days}
-                                    min={1}
-                                    max={30}
-                                    onChange={(e, { value }) => updateField('days', value)}
-                                />
+                        <div className="form-divider"></div>
+
+                        {/* Step 2: Schedule */}
+                        <div className="form-step">
+                            <div className="step-header">
+                                <div className="step-number">2</div>
+                                <div>
+                                    <h3>Schedule</h3>
+                                    <p>When and how long?</p>
+                                </div>
                             </div>
-                            <div className="form-section">
-                                <DatePicker
-                                    datePickerType="single"
-                                    onChange={([date]) => {
-                                        if (date) {
-                                            const formatted = date.toISOString().split('T')[0];
-                                            updateField('start_date', formatted);
-                                        }
-                                    }}
-                                >
-                                    <DatePickerInput
-                                        id="start-date"
-                                        labelText="🗓️ Start Date"
-                                        placeholder="dd/mm/yyyy"
+                            <div className="form-row">
+                                <div className="form-field">
+                                    <NumberInput
+                                        id="days"
+                                        label="Duration (days)"
+                                        value={formData.days}
+                                        min={1}
+                                        max={30}
+                                        onChange={(e, { value }) => updateField('days', value)}
                                     />
-                                </DatePicker>
+                                </div>
+                                <div className="form-field">
+                                    <DatePicker
+                                        datePickerType="single"
+                                        onChange={([date]) => {
+                                            if (date) {
+                                                const formatted = date.toISOString().split('T')[0];
+                                                updateField('start_date', formatted);
+                                            }
+                                        }}
+                                    >
+                                        <DatePickerInput
+                                            id="start-date"
+                                            labelText="Start Date"
+                                            placeholder="dd/mm/yyyy"
+                                        />
+                                    </DatePicker>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Budget + Travelers */}
-                        <div className="form-row">
-                            <div className="form-section flex-1">
-                                <TextInput
-                                    id="budget"
-                                    labelText="💵 Budget (₹)"
-                                    placeholder="8000"
-                                    type="number"
-                                    value={formData.budget}
-                                    onChange={(e) => updateField('budget', e.target.value)}
-                                />
+                        <div className="form-divider"></div>
+
+                        {/* Step 3: Budget & Travelers */}
+                        <div className="form-step">
+                            <div className="step-header">
+                                <div className="step-number">3</div>
+                                <div>
+                                    <h3>Budget & Group</h3>
+                                    <p>Set your budget and group size</p>
+                                </div>
                             </div>
-                            <div className="form-section">
-                                <NumberInput
-                                    id="travelers"
-                                    label="👥 Travelers"
-                                    value={formData.travelers}
-                                    min={1}
-                                    max={20}
-                                    onChange={(e, { value }) => updateField('travelers', value)}
-                                />
+                            <div className="form-row">
+                                <div className="form-field flex-grow">
+                                    <TextInput
+                                        id="budget"
+                                        labelText="Total Budget (₹)"
+                                        placeholder="e.g. 15000"
+                                        type="number"
+                                        value={formData.budget}
+                                        onChange={(e) => updateField('budget', e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-field">
+                                    <NumberInput
+                                        id="travelers"
+                                        label="Travelers"
+                                        value={formData.travelers}
+                                        min={1}
+                                        max={20}
+                                        onChange={(e, { value }) => updateField('travelers', value)}
+                                    />
+                                </div>
                             </div>
+                            {formData.budget && formData.travelers > 0 && (
+                                <div className="budget-hint">
+                                    ≈ ₹{Math.round(Number(formData.budget) / formData.travelers / formData.days).toLocaleString('en-IN')} per person / day
+                                </div>
+                            )}
                         </div>
 
-                        {/* Travel Style */}
-                        <div className="form-section">
-                            <p className="field-label">🎒 Travel Style</p>
+                        <div className="form-divider"></div>
+
+                        {/* Step 4: Travel Style */}
+                        <div className="form-step">
+                            <div className="step-header">
+                                <div className="step-number">4</div>
+                                <div>
+                                    <h3>Travel Style</h3>
+                                    <p>How do you prefer to travel?</p>
+                                </div>
+                            </div>
                             <div className="style-cards">
                                 {TRAVEL_STYLES.map(style => (
                                     <button
@@ -181,6 +255,9 @@ const TripPlanner = ({ onPlanGenerated }) => {
                                         className={`style-card ${formData.travel_style === style.id ? 'active' : ''}`}
                                         onClick={() => updateField('travel_style', style.id)}
                                     >
+                                        <div className="style-check">
+                                            {formData.travel_style === style.id && <span>✓</span>}
+                                        </div>
                                         <span className="style-icon">{style.icon}</span>
                                         <span className="style-label">{style.label}</span>
                                         <span className="style-desc">{style.desc}</span>
@@ -189,9 +266,17 @@ const TripPlanner = ({ onPlanGenerated }) => {
                             </div>
                         </div>
 
-                        {/* Interests */}
-                        <div className="form-section">
-                            <p className="field-label">❤️ What are you interested in?</p>
+                        <div className="form-divider"></div>
+
+                        {/* Step 5: Interests */}
+                        <div className="form-step">
+                            <div className="step-header">
+                                <div className="step-number">5</div>
+                                <div>
+                                    <h3>Interests</h3>
+                                    <p>Select what excites you <span className="hint-text">(optional — pick any)</span></p>
+                                </div>
+                            </div>
                             <div className="interest-chips">
                                 {INTERESTS.map(interest => (
                                     <button
@@ -200,30 +285,43 @@ const TripPlanner = ({ onPlanGenerated }) => {
                                         className={`interest-chip ${formData.interests.includes(interest.id) ? 'active' : ''}`}
                                         onClick={() => toggleInterest(interest.id)}
                                     >
-                                        <span>{interest.icon}</span>
+                                        <span className="chip-icon">{interest.icon}</span>
                                         <span>{interest.label}</span>
+                                        {formData.interests.includes(interest.id) && (
+                                            <span className="chip-check">✓</span>
+                                        )}
                                     </button>
                                 ))}
                             </div>
                         </div>
 
+                        {/* Error */}
                         {error && <div className="form-error">{error}</div>}
 
-                        {isLoading ? (
-                            <InlineLoading
-                                description="Generating your trip plan..."
-                                status="active"
-                                className="loading-indicator"
-                            />
-                        ) : (
-                            <Button
-                                type="submit"
-                                renderIcon={SendFilled}
-                                className="submit-btn"
-                            >
-                                Generate My Trip ✨
-                            </Button>
-                        )}
+                        {/* Submit */}
+                        <div className="submit-area">
+                            {isLoading ? (
+                                <div className="loading-container">
+                                    <div className="loading-spinner"></div>
+                                    <div className="loading-text">
+                                        <strong>Generating your personalized itinerary...</strong>
+                                        <p>Our AI is crafting the perfect plan for you</p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    <Button
+                                        type="submit"
+                                        renderIcon={SendFilled}
+                                        className="submit-btn"
+                                        disabled={!formData.destination.trim()}
+                                    >
+                                        Generate My Trip Plan
+                                    </Button>
+                                    <p className="submit-hint">Powered by AI — takes about 15-30 seconds</p>
+                                </>
+                            )}
+                        </div>
                     </form>
                 </div>
             </div>

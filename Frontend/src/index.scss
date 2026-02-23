@@ -1,16 +1,64 @@
 @use '@carbon/react';
 
 /* ═══════════════════════════════════════════════════════
-   PlanIT Global Styles — Carbon + Original Design
+   PlanIT Global Styles — Professional Design System
    ═══════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
+    /* Primary Colors */
     --planit-accent: #4f46e5;
     --planit-accent-dark: #4338ca;
     --planit-accent-light: #eef2ff;
+    --planit-accent-hover: #6366f1;
+    
+    /* Neutral Colors */
+    --planit-gray-50: #f9fafb;
+    --planit-gray-100: #f3f4f6;
+    --planit-gray-200: #e5e7eb;
+    --planit-gray-300: #d1d5db;
+    --planit-gray-400: #9ca3af;
+    --planit-gray-500: #6b7280;
+    --planit-gray-600: #4b5563;
+    --planit-gray-700: #374151;
+    --planit-gray-800: #1f2937;
+    --planit-gray-900: #111827;
+    
+    /* Background Gradients */
     --planit-bg: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e8edf5 100%);
+    --planit-bg-subtle: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+    
+    /* Shadows - Professional Depth */
+    --planit-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --planit-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --planit-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --planit-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --planit-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    --planit-shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --planit-shadow-accent: 0 10px 25px -5px rgba(79, 70, 229, 0.3), 0 4px 6px -2px rgba(79, 70, 229, 0.2);
+    
+    /* Spacing Scale */
+    --planit-space-xs: 0.25rem;
+    --planit-space-sm: 0.5rem;
+    --planit-space-md: 1rem;
+    --planit-space-lg: 1.5rem;
+    --planit-space-xl: 2rem;
+    --planit-space-2xl: 3rem;
+    --planit-space-3xl: 4rem;
+    
+    /* Border Radius */
+    --planit-radius-sm: 0.5rem;
+    --planit-radius-md: 0.75rem;
+    --planit-radius-lg: 1rem;
+    --planit-radius-xl: 1.25rem;
+    --planit-radius-2xl: 1.5rem;
+    --planit-radius-full: 9999px;
+    
+    /* Transitions */
+    --planit-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --planit-transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --planit-transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
@@ -21,10 +69,13 @@
 
 body {
     font-family: 'Inter', 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #f4f4f4;
-    color: #161616;
+    background: var(--planit-bg);
+    color: var(--planit-gray-900);
     line-height: 1.6;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 #root {
@@ -37,26 +88,49 @@ body {
     z-index: 100;
 }
 
-/* Make Carbon buttons use our purple accent */
+/* Make Carbon buttons use our purple accent with professional styling */
 .cds--btn--primary {
-    background-color: var(--planit-accent) !important;
+    background: linear-gradient(135deg, var(--planit-accent) 0%, var(--planit-accent-dark) 100%) !important;
     border-color: var(--planit-accent) !important;
+    border-radius: var(--planit-radius-md) !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.01em !important;
+    box-shadow: var(--planit-shadow-sm) !important;
+    transition: all var(--planit-transition-base) !important;
 }
 
 .cds--btn--primary:hover {
-    background-color: var(--planit-accent-dark) !important;
+    background: linear-gradient(135deg, var(--planit-accent-hover) 0%, var(--planit-accent) 100%) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: var(--planit-shadow-md) !important;
 }
 
-/* Carbon text inputs — underline to rounded */
+.cds--btn--primary:active {
+    transform: translateY(0) !important;
+    box-shadow: var(--planit-shadow-sm) !important;
+}
+
+/* Carbon text inputs — Professional rounded design */
 .cds--text-input,
 .cds--password-input,
 .cds--number input[type="number"],
 .cds--date-picker__input {
-    border-radius: 10px !important;
-    border: 1.5px solid #e2e8f0 !important;
-    border-bottom: 1.5px solid #e2e8f0 !important;
+    border-radius: var(--planit-radius-md) !important;
+    border: 1.5px solid var(--planit-gray-200) !important;
+    border-bottom: 1.5px solid var(--planit-gray-200) !important;
     background: #fff !important;
-    padding: 0.75rem 1rem !important;
+    padding: 0.875rem 1.125rem !important;
+    font-size: 0.9375rem !important;
+    transition: all var(--planit-transition-base) !important;
+    box-shadow: var(--planit-shadow-xs) !important;
+}
+
+.cds--text-input:hover,
+.cds--password-input:hover,
+.cds--number input[type="number"]:hover,
+.cds--date-picker__input:hover {
+    border-color: var(--planit-gray-300) !important;
+    box-shadow: var(--planit-shadow-sm) !important;
 }
 
 .cds--text-input:focus,
@@ -64,8 +138,9 @@ body {
 .cds--number input[type="number"]:focus,
 .cds--date-picker__input:focus {
     border-color: var(--planit-accent) !important;
-    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15) !important;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1), var(--planit-shadow-sm) !important;
     outline: none !important;
+    background: #fff !important;
 }
 
 /* Remove Carbon's bottom-border-only style */
