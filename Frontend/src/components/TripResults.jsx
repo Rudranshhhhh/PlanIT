@@ -1,6 +1,43 @@
 import { Button, Tag } from '@carbon/react';
 import { Renew } from '@carbon/icons-react';
+import WeatherWidget from './WeatherWidget';
+import TripMap from './TripMap';
 import './TripResults.css';
+
+// Pick a contextual icon for an activity line
+function getIcon(text) {
+    const t = text.toLowerCase();
+    if (/breakfast|brunch/.test(t)) return '🍳';
+    if (/lunch|meal/.test(t)) return '🍽️';
+    if (/dinner|supper/.test(t)) return '🍷';
+    if (/cafe|coffee/.test(t)) return '☕';
+    if (/restaurant|food|eat|cuisine|street food/.test(t)) return '🍜';
+    if (/hotel|check.?in|stay|resort|hostel/.test(t)) return '🏨';
+    if (/check.?out|depart|airport|flight/.test(t)) return '🛫';
+    if (/temple|mandir|shrine/.test(t)) return '🛕';
+    if (/church|cathedral/.test(t)) return '⛪';
+    if (/mosque|masjid/.test(t)) return '🕌';
+    if (/museum|gallery|exhibit/.test(t)) return '🏛️';
+    if (/beach|coast|shore/.test(t)) return '🏖️';
+    if (/lake|river|waterfall/.test(t)) return '🌊';
+    if (/mountain|trek|hike/.test(t)) return '🥾';
+    if (/fort|palace|castle|monument/.test(t)) return '🏰';
+    if (/market|bazaar|shopping|mall|shop/.test(t)) return '🛍️';
+    if (/park|garden|botanical/.test(t)) return '🌳';
+    if (/zoo|wildlife|safari|sanctuary/.test(t)) return '🦁';
+    if (/sunset|sunrise|view/.test(t)) return '🌅';
+    if (/photo/.test(t)) return '📸';
+    if (/boat|cruise|ferry|kayak/.test(t)) return '⛵';
+    if (/spa|massage|relax|yoga/.test(t)) return '🧘';
+    if (/train|railway/.test(t)) return '🚂';
+    if (/bus/.test(t)) return '🚌';
+    if (/taxi|cab|drive|car/.test(t)) return '🚕';
+    if (/walk|stroll/.test(t)) return '🚶';
+    if (/night|bar|pub|club/.test(t)) return '🌙';
+    if (/show|dance|music|concert|performance/.test(t)) return '🎭';
+    if (/festival|celebration|event/.test(t)) return '🎉';
+    return '📍';
+}
 
 const TripResults = ({ tripData, tripResults, onPlanAnother }) => {
     const { destination, days, start_date, budget, travelers, travel_style, interests } = tripData;
@@ -54,6 +91,10 @@ const TripResults = ({ tripData, tripResults, onPlanAnother }) => {
                     </div>
                 </div>
 
+                {/* Weather & Map */}
+                <WeatherWidget destination={destination} />
+                <TripMap destination={destination} />
+
                 {/* Itinerary */}
                 <div className="itinerary-section">
                     <h2 className="section-title"><span>📋</span> Your Itinerary</h2>
@@ -72,14 +113,49 @@ const TripResults = ({ tripData, tripResults, onPlanAnother }) => {
                                             {block.content.split('\n').map((line, j) => {
                                                 const trimmed = line.trim();
                                                 if (!trimmed) return null;
+
+                                                // Section headings (Morning, Afternoon, Evening, etc.)
                                                 if (trimmed.startsWith('**') || trimmed.startsWith('##')) {
                                                     const clean = trimmed.replace(/[*#]+/g, '').trim();
-                                                    return <h4 key={j} className="activity-heading">{clean}</h4>;
+                                                    const lower = clean.toLowerCase();
+                                                    let badgeClass = '';
+                                                    if (lower.includes('morning') || lower.includes('breakfast')) badgeClass = 'time-morning';
+                                                    else if (lower.includes('afternoon') || lower.includes('lunch')) badgeClass = 'time-afternoon';
+                                                    else if (lower.includes('evening') || lower.includes('dinner') || lower.includes('sunset')) badgeClass = 'time-evening';
+                                                    else if (lower.includes('night')) badgeClass = 'time-night';
+
+                                                    return badgeClass
+                                                        ? <div key={j} className={`time-badge ${badgeClass}`}>{clean}</div>
+                                                        : <h4 key={j} className="activity-heading">{clean}</h4>;
                                                 }
+
+                                                // Tip/note lines
+                                                const lowerTrimmed = trimmed.toLowerCase().replace(/^[-•*]\s*/, '');
+                                                if (lowerTrimmed.startsWith('tip') || lowerTrimmed.startsWith('note:') || lowerTrimmed.startsWith('pro tip') || lowerTrimmed.startsWith('💡')) {
+                                                    const tipText = trimmed.replace(/^[-•*]\s*/, '').replace(/\*\*/g, '');
+                                                    return <div key={j} className="tip-callout">💡 {tipText}</div>;
+                                                }
+
+                                                // Bullet-point activities
                                                 if (trimmed.startsWith('-') || trimmed.startsWith('•') || trimmed.startsWith('*')) {
-                                                    const clean = trimmed.replace(/^[-•*]\s*/, '').replace(/\*\*/g, '');
-                                                    return <p key={j} className="activity-item">• {clean}</p>;
+                                                    let clean = trimmed.replace(/^[-•*]\s*/, '').replace(/\*\*/g, '');
+                                                    // Extract costs
+                                                    const costMatch = clean.match(/₹[\d,]+(?:\s*[-–]\s*₹?[\d,]+)?/g);
+                                                    const textWithoutCost = clean.replace(/\(?\s*₹[\d,]+(?:\s*[-–]\s*₹?[\d,]+)?\s*\)?/g, '').trim();
+                                                    // Pick an icon
+                                                    const icon = getIcon(clean);
+                                                    return (
+                                                        <div key={j} className="activity-row">
+                                                            <span className="activity-icon">{icon}</span>
+                                                            <span className="activity-label">{textWithoutCost || clean}</span>
+                                                            {costMatch && costMatch.map((c, ci) => (
+                                                                <span key={ci} className="cost-tag">{c}</span>
+                                                            ))}
+                                                        </div>
+                                                    );
                                                 }
+
+                                                // Plain text
                                                 return <p key={j} className="activity-text">{trimmed.replace(/\*\*/g, '')}</p>;
                                             })}
                                         </div>

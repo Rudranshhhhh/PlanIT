@@ -115,15 +115,33 @@ TRANSPORT: {dest_data["transport"]}
 USER PREFERENCES: {json.dumps(preferences or {"pace": "moderate", "interests": "general"})}
 BUDGET LEVEL: {budget}
 
-Generate a structured itinerary with:
-1. Each day clearly labeled (Day 1, Day 2, etc.)
-2. Morning, Afternoon, Evening sections
-3. Specific times (e.g., "9:00 AM - Visit Eiffel Tower")
-4. Transport between locations
-5. Meal recommendations
-6. Estimated costs
+Generate a structured itinerary following this EXACT format for each day:
 
-Make it practical and logistically sensible (group nearby attractions).
+Day 1: [Theme/Title]
+
+**Morning (9:00 AM – 12:00 PM)**
+- 9:00 AM – [Activity] (₹[cost] if applicable)
+- 10:30 AM – [Activity]
+
+**Afternoon (12:00 PM – 5:00 PM)**
+- 12:00 PM – Lunch at [Restaurant] (₹[cost] per person)
+- 2:00 PM – [Activity]
+
+**Evening (5:00 PM – 9:00 PM)**
+- 5:30 PM – [Activity]
+- 7:30 PM – Dinner at [Restaurant] (₹[cost] per person)
+
+Tip: [Useful local tip or recommendation]
+
+Rules:
+1. Each day MUST have **Morning**, **Afternoon**, **Evening** sections with bold markdown
+2. Use bullet points (-) for each activity with specific times
+3. Include ₹ costs in parentheses where applicable
+4. Add 1-2 tips per day starting with "Tip:"
+5. Group nearby attractions logically
+6. Include transport between locations
+7. Make it practical and realistic
+
 """
 
         messages = [{"role": "user", "content": prompt}]

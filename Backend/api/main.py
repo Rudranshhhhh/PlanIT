@@ -95,6 +95,61 @@ def google_login():
     return jsonify({"user": {"name": name or email.split("@")[0], "email": email}}), 201
 
 
+# ─── Weather ──────────────────────────────────────────────
+@app.route("/weather/<destination>")
+def weather(destination):
+    """Fetch current weather + 5-day forecast from OpenWeatherMap."""
+    import requests as req
+
+    api_key = "f912cbbaac29b1aafe1c2fca56e3d628"
+
+    # Current weather (also gives us lat/lon)
+    current_url = f"https://api.openweathermap.org/data/2.5/weather?q={destination}&appid={api_key}&units=metric"
+    current_resp = req.get(current_url, timeout=10)
+    if current_resp.status_code != 200:
+        return jsonify({"error": f"Could not find weather for '{destination}'"}), 404
+
+    current = current_resp.json()
+    lat = current["coord"]["lat"]
+    lon = current["coord"]["lon"]
+
+    # 5-day / 3-hour forecast
+    forecast_url = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={api_key}&units=metric&cnt=40"
+    forecast_resp = req.get(forecast_url, timeout=10)
+    forecast_data = forecast_resp.json() if forecast_resp.status_code == 200 else {}
+
+    # Extract one forecast per day (noon readings)
+    daily = []
+    seen_dates = set()
+    for item in forecast_data.get("list", []):
+        date = item["dt_txt"].split(" ")[0]
+        hour = item["dt_txt"].split(" ")[1]
+        if date not in seen_dates and "12:00" in hour:
+            seen_dates.add(date)
+            daily.append({
+                "date": date,
+                "temp": round(item["main"]["temp"]),
+                "temp_min": round(item["main"]["temp_min"]),
+                "temp_max": round(item["main"]["temp_max"]),
+                "description": item["weather"][0]["description"],
+                "icon": item["weather"][0]["icon"],
+            })
+
+    return jsonify({
+        "current": {
+            "temp": round(current["main"]["temp"]),
+            "feels_like": round(current["main"]["feels_like"]),
+            "humidity": current["main"]["humidity"],
+            "description": current["weather"][0]["description"],
+            "icon": current["weather"][0]["icon"],
+            "wind_speed": current.get("wind", {}).get("speed", 0),
+        },
+        "forecast": daily[:5],
+        "coords": {"lat": lat, "lon": lon},
+        "city": current.get("name", destination),
+    })
+
+
 # ─── Session Management ──────────────────────────────────
 @app.route("/session/create", methods=["POST"])
 def create_session():
