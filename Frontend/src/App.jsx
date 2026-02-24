@@ -12,8 +12,17 @@ import SplitText from './SplitText';
 import './App.css';
 
 function App() {
+  // Read login state from localStorage immediately (not in useEffect)
+  const savedUser = (() => {
+    try {
+      const s = localStorage.getItem('planit_user');
+      return s ? JSON.parse(s) : null;
+    } catch { return null; }
+  })();
+
   const [currentView, setCurrentView] = useState('home');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!savedUser);
+  const [userName, setUserName] = useState(savedUser?.name || '');
   const [tripData, setTripData] = useState(null);
   const [tripResults, setTripResults] = useState(null);
 
@@ -22,9 +31,18 @@ function App() {
     window.scrollTo(0, 0);
   };
 
-  const handleLogin = () => {
+  const handleLogin = (user) => {
     setIsLoggedIn(true);
+    setUserName(user?.name || '');
+    localStorage.setItem('planit_user', JSON.stringify(user));
     navigate('planner');
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUserName('');
+    localStorage.removeItem('planit_user');
+    navigate('home');
   };
 
   const handlePlanGenerated = (results, formData) => {
@@ -91,15 +109,16 @@ function App() {
                 <div className="hero-buttons">
                   <Button
                     size="lg"
-                    renderIcon={ArrowRight}
                     onClick={() => navigate(isLoggedIn ? 'planner' : 'signup')}
                     className="hero-cta"
                   >
                     Get Started Free
                   </Button>
-                  <button className="btn-secondary" onClick={() => navigate('login')}>
-                    Existing User?
-                  </button>
+                  {!isLoggedIn && (
+                    <button className="btn-secondary" onClick={() => navigate('login')}>
+                      Existing User?
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -136,7 +155,7 @@ function App() {
 
   return (
     <div className="app">
-      <Header onNavigate={navigate} isLoggedIn={isLoggedIn} />
+      <Header onNavigate={navigate} isLoggedIn={isLoggedIn} userName={userName} onLogout={handleLogout} />
       <div className="app-container">
         {renderView()}
         {currentView === 'home' && <Footer />}

@@ -13,6 +13,7 @@ from flask_cors import CORS
 from config import settings
 from agents.planner_agent import PlannerAgent
 from memory.session_store import get_session_store
+from auth import create_user, authenticate_user
 
 app = Flask(__name__)
 CORS(app)
@@ -33,6 +34,65 @@ def get_planner(session_id: str) -> PlannerAgent:
 @app.route("/health")
 def health():
     return jsonify({"status": "ok", "service": "planit-api"})
+
+
+# ─── Auth ─────────────────────────────────────────────────
+@app.route("/auth/signup", methods=["POST"])
+def signup():
+    data = request.get_json(silent=True) or {}
+    name = data.get("name", "").strip()
+    email = data.get("email", "").strip()
+    password = data.get("password", "")
+
+    if not name or not email or not password:
+        return jsonify({"error": "Name, email, and password are required."}), 400
+
+    try:
+        user = create_user(name, email, password)
+        return jsonify({"user": user}), 201
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 409
+
+
+@app.route("/auth/login", methods=["POST"])
+def login():
+    data = request.get_json(silent=True) or {}
+    email = data.get("email", "").strip()
+    password = data.get("password", "")
+
+    if not email or not password:
+        return jsonify({"error": "Email and password are required."}), 400
+
+    user = authenticate_user(email, password)
+    if not user:
+        return jsonify({"error": "Invalid email or password."}), 401
+
+    return jsonify({"user": user}), 200
+
+
+@app.route("/auth/google", methods=["POST"])
+def google_login():
+    """Upsert a Google-authenticated user into MongoDB."""
+    data = request.get_json(silent=True) or {}
+    name = data.get("name", "").strip()
+    email = data.get("email", "").strip()
+
+    if not email:
+        return jsonify({"error": "Email is required."}), 400
+
+    from auth import _users  # reuse the collection
+
+    # Upsert: create if new, return existing if already there
+    existing = _users.find_one({"email": email})
+    if existing:
+        return jsonify({"user": {"name": existing["name"], "email": existing["email"]}}), 200
+
+    _users.insert_one({
+        "name": name or email.split("@")[0],
+        "email": email,
+        "password": None,  # Google users have no local password
+    })
+    return jsonify({"user": {"name": name or email.split("@")[0], "email": email}}), 201
 
 
 # ─── Session Management ──────────────────────────────────

@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     groq_api_key: str = ""
     groq_model: str = "llama-3.3-70b-versatile"
 
+    # MongoDB
+    mongo_uri: str = ""
+
     # API Configuration
     api_host: str = "127.0.0.1"
     api_port: int = 8000

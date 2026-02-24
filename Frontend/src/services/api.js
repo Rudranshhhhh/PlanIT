@@ -66,6 +66,30 @@ export const updateUserProfile = async (userId, data) => {
 };
 
 /**
+ * Authentication
+ */
+export const signupUser = async (name, email, password) => {
+    return await fetchAPI('/auth/signup', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, password }),
+    });
+};
+
+export const loginUser = async (email, password) => {
+    return await fetchAPI('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+    });
+};
+
+export const googleLogin = async (name, email) => {
+    return await fetchAPI('/auth/google', {
+        method: 'POST',
+        body: JSON.stringify({ name, email }),
+    });
+};
+
+/**
  * Simple Health Check
  */
 export const checkHealth = async () => {
