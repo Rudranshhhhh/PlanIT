@@ -15,10 +15,12 @@ L.Icon.Default.mergeOptions({
 const TripMap = ({ destination }) => {
     const [coords, setCoords] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         if (!destination) return;
         setLoading(true);
+        setError(false);
 
         // Try weather API first (gives coords + weather data)
         fetch(`/api/weather/${encodeURIComponent(destination)}`)
@@ -29,7 +31,7 @@ const TripMap = ({ destination }) => {
                 }
             })
             .catch(() => {
-                // Fallback: use OpenStreetMap Nominatim for geocoding (free, no key)
+                // Fallback: OpenStreetMap Nominatim
                 return fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(destination)}&format=json&limit=1`)
                     .then(r => r.json())
                     .then(results => {
@@ -39,49 +41,52 @@ const TripMap = ({ destination }) => {
                                 lon: parseFloat(results[0].lon),
                                 city: results[0].display_name.split(',')[0],
                             });
+                        } else {
+                            setError(true);
                         }
                     })
-                    .catch(() => setCoords(null));
+                    .catch(() => { setError(true); setCoords(null); });
             })
             .finally(() => setLoading(false));
     }, [destination]);
 
     if (loading) {
         return (
-            <div className="trip-map-wrapper">
-                <h2 className="section-title"><span>🗺️</span> Destination Map</h2>
-                <div className="map-loading">
-                    <div className="weather-spinner" />
-                    <span>Loading map…</span>
-                </div>
+            <div className="trip-map-loading">
+                <div className="trip-map-spinner" />
+                <span>Loading map…</span>
             </div>
         );
     }
 
-    if (!coords) return null;
+    if (error || !coords) {
+        return (
+            <div className="trip-map-loading">
+                <span>📍 Could not load map for {destination}</span>
+            </div>
+        );
+    }
 
     return (
-        <div className="trip-map-wrapper">
-            <h2 className="section-title"><span>🗺️</span> Destination Map</h2>
-            <div className="map-container">
-                <MapContainer
-                    center={[coords.lat, coords.lon]}
-                    zoom={12}
-                    scrollWheelZoom={true}
-                    style={{ height: '100%', width: '100%', borderRadius: '16px' }}
-                >
-                    <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    <Marker position={[coords.lat, coords.lon]}>
-                        <Popup>
-                            <strong>{coords.city}</strong><br />
-                            Your destination 📍
-                        </Popup>
-                    </Marker>
-                </MapContainer>
-            </div>
+        <div style={{ height: '100%', width: '100%' }}>
+            <MapContainer
+                key={`${coords.lat}-${coords.lon}`}
+                center={[coords.lat, coords.lon]}
+                zoom={12}
+                scrollWheelZoom={true}
+                style={{ height: '100%', width: '100%' }}
+            >
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={[coords.lat, coords.lon]}>
+                    <Popup>
+                        <strong>{coords.city}</strong><br />
+                        Your destination 📍
+                    </Popup>
+                </Marker>
+            </MapContainer>
         </div>
     );
 };

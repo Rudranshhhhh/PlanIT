@@ -31,6 +31,10 @@ class Settings(BaseSettings):
     # Geo API
     google_maps_api_key: str = ""
 
+    # Travelpayouts
+    travelpayouts_api_key: str = ""
+    travelpayouts_marker: str = ""
+
     class Config:
         env_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
         env_file_encoding = "utf-8"

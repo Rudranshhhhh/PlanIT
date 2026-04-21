@@ -31,8 +31,9 @@ const INTERESTS = [
     { id: 'history', label: 'History', icon: '📜' },
 ];
 
-const TripPlanner = ({ onPlanGenerated }) => {
+const TripPlanner = ({ onFlightsFound }) => {
     const [formData, setFormData] = useState({
+        originCity: '',
         destinations: [''],
         days: 3,
         start_date: '',
@@ -68,23 +69,27 @@ const TripPlanner = ({ onPlanGenerated }) => {
         setIsLoading(true);
 
         try {
-            const response = await fetch('/api/plan', {
+            const payload = {
+                ...formData,
+                destinations: validDestinations,
+                budget: Number(formData.budget) || 0,
+            };
+
+            const response = await fetch('/api/flights/search', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...formData,
-                    destinations: validDestinations,
-                    budget: Number(formData.budget) || 0,
-                }),
+                body: JSON.stringify(payload),
             });
 
             if (!response.ok) {
                 const errData = await response.json().catch(() => ({}));
-                throw new Error(errData.error || 'Failed to generate plan');
+                throw new Error(errData.error || 'Failed to search flights');
             }
 
             const result = await response.json();
-            onPlanGenerated(result, formData);
+            if (onFlightsFound) {
+                onFlightsFound(result.flights || [], payload);
+            }
         } catch (err) {
             setError(err.message || 'Something went wrong. Please try again.');
         } finally {
@@ -94,7 +99,7 @@ const TripPlanner = ({ onPlanGenerated }) => {
 
     // Progress calculation
     const completedSteps = [
-        formData.destinations.some(d => d.trim()),
+        formData.originCity.trim() && formData.destinations.some(d => d.trim()),
         formData.days > 0,
         formData.budget,
         formData.travel_style,
@@ -134,15 +139,26 @@ const TripPlanner = ({ onPlanGenerated }) => {
                 <div className="planner-card">
                     <form onSubmit={handleSubmit}>
 
-                        {/* Step 1: Destinations */}
+                        {/* Step 1: Journey Details */}
                         <div className="form-step">
                             <div className="step-header">
                                 <div className="step-number">1</div>
                                 <div>
-                                    <h3>Destinations</h3>
-                                    <p>Where would you like to explore?</p>
+                                    <h3>Journey Details</h3>
+                                    <p>Where are you flying from and to?</p>
                                 </div>
                             </div>
+                            <div style={{ marginBottom: '16px' }}>
+                                <TextInput
+                                    id="originCity"
+                                    labelText="Origin City (Optional)"
+                                    placeholder="e.g. New York, London, Delhi..."
+                                    value={formData.originCity}
+                                    onChange={(e) => updateField('originCity', e.target.value)}
+                                    size="lg"
+                                />
+                            </div>
+                            <div style={{ fontWeight: 600, marginBottom: '8px', fontSize: '0.9rem', color: '#64748b' }}>Destinations:</div>
                             {formData.destinations.map((dest, index) => (
                                 <div key={index} style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
                                     <TextInput
@@ -334,8 +350,8 @@ const TripPlanner = ({ onPlanGenerated }) => {
                                 <div className="loading-container">
                                     <div className="loading-spinner"></div>
                                     <div className="loading-text">
-                                        <strong>Generating your personalized itinerary...</strong>
-                                        <p>Our AI is crafting the perfect plan for you</p>
+                                        <strong>Searching flights...</strong>
+                                        <p>Checking available routes</p>
                                     </div>
                                 </div>
                             ) : (

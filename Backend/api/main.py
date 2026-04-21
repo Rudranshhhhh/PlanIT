@@ -29,6 +29,8 @@ def get_planner(session_id: str) -> PlannerAgent:
         planners[session_id] = PlannerAgent()
     return planners[session_id]
 
+import flights
+
 
 # ─── Health ───────────────────────────────────────────────
 @app.route("/health")
@@ -205,6 +207,33 @@ def chat(session_id):
 
 
 # ─── Structured Trip Planner ──────────────────────────────
+@app.route("/flights/search", methods=["POST"])
+def search_flights():
+    """Rapid endpoint to fetch flights and IATA codes before itinerary generation."""
+    data = request.get_json()
+    origin_city = data.get("originCity", "")
+    destinations = data.get("destinations", [])
+    
+    valid_destinations = [d for d in destinations if d.strip()]
+    if not valid_destinations and data.get("destination"):
+        valid_destinations = [data.get("destination")]
+        
+    start_date = data.get("start_date", "")
+
+    flight_data = []
+    if origin_city and start_date and valid_destinations:
+        primary_dest = valid_destinations[0]
+        codes = flights.get_iata_codes(origin_city, primary_dest)
+        if codes.get("origin_iata") and codes.get("destination_iata"):
+            flight_data = flights.fetch_flight_prices(
+                codes["origin_iata"], 
+                codes["destination_iata"], 
+                start_date
+            )
+
+    return jsonify({"flights": flight_data})
+
+
 @app.route("/plan", methods=["POST"])
 def plan_trip():
     """Generate a trip plan from structured form data."""
@@ -222,6 +251,7 @@ def plan_trip():
     travelers = data.get("travelers", 1)
     travel_style = data.get("travel_style", "moderate")
     interests = data.get("interests", [])
+    origin_city = data.get("originCity", "")
 
     valid_destinations = [d for d in destinations if d.strip()]
     if not valid_destinations:
@@ -256,6 +286,7 @@ def plan_trip():
             "preferences": result.get("preferences", {}),
             "budget_analysis": result.get("budget_analysis", {}),
             "input": {
+                "originCity": origin_city,
                 "destinations": valid_destinations,
                 "days": days,
                 "start_date": start_date,
