@@ -33,7 +33,7 @@ const INTERESTS = [
 
 const TripPlanner = ({ onPlanGenerated }) => {
     const [formData, setFormData] = useState({
-        destination: '',
+        destinations: [''],
         days: 3,
         start_date: '',
         budget: '',
@@ -59,8 +59,9 @@ const TripPlanner = ({ onPlanGenerated }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.destination.trim()) {
-            setError('Please enter a destination');
+        const validDestinations = formData.destinations.filter(d => d.trim());
+        if (validDestinations.length === 0) {
+            setError('Please enter at least one destination');
             return;
         }
         setError('');
@@ -72,6 +73,7 @@ const TripPlanner = ({ onPlanGenerated }) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     ...formData,
+                    destinations: validDestinations,
                     budget: Number(formData.budget) || 0,
                 }),
             });
@@ -92,7 +94,7 @@ const TripPlanner = ({ onPlanGenerated }) => {
 
     // Progress calculation
     const completedSteps = [
-        formData.destination.trim(),
+        formData.destinations.some(d => d.trim()),
         formData.days > 0,
         formData.budget,
         formData.travel_style,
@@ -132,26 +134,54 @@ const TripPlanner = ({ onPlanGenerated }) => {
                 <div className="planner-card">
                     <form onSubmit={handleSubmit}>
 
-                        {/* Step 1: Destination */}
+                        {/* Step 1: Destinations */}
                         <div className="form-step">
                             <div className="step-header">
                                 <div className="step-number">1</div>
                                 <div>
-                                    <h3>Destination</h3>
+                                    <h3>Destinations</h3>
                                     <p>Where would you like to explore?</p>
                                 </div>
                             </div>
-                            <TextInput
-                                id="destination"
-                                labelText=""
-                                placeholder="e.g. Mumbai, Goa, Jaipur, Tokyo, Paris..."
-                                value={formData.destination}
-                                onChange={(e) => updateField('destination', e.target.value)}
-                                size="lg"
-                                invalid={!!error && !formData.destination}
-                                invalidText={error}
-                                autoFocus
-                            />
+                            {formData.destinations.map((dest, index) => (
+                                <div key={index} style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+                                    <TextInput
+                                        id={`destination-${index}`}
+                                        labelText=""
+                                        placeholder={index === 0 ? "e.g. Mumbai, Goa, Jaipur..." : "Add another city"}
+                                        value={dest}
+                                        onChange={(e) => {
+                                            const newDests = [...formData.destinations];
+                                            newDests[index] = e.target.value;
+                                            updateField('destinations', newDests);
+                                        }}
+                                        size="lg"
+                                        invalid={index === 0 && !!error && !formData.destinations.some(d => d.trim())}
+                                        invalidText={index === 0 ? error : ''}
+                                        autoFocus={index === 0}
+                                    />
+                                    {formData.destinations.length > 1 && (
+                                        <Button
+                                            kind="danger--ghost"
+                                            size="sm"
+                                            onClick={() => {
+                                                const newDests = formData.destinations.filter((_, i) => i !== index);
+                                                updateField('destinations', newDests);
+                                            }}
+                                            style={{ padding: '0 12px' }}
+                                        >
+                                            ✕
+                                        </Button>
+                                    )}
+                                </div>
+                            ))}
+                            <Button
+                                kind="ghost"
+                                size="sm"
+                                onClick={() => updateField('destinations', [...formData.destinations, ''])}
+                            >
+                                + Add Destination
+                            </Button>
                         </div>
 
                         <div className="form-divider"></div>
@@ -314,7 +344,7 @@ const TripPlanner = ({ onPlanGenerated }) => {
                                         type="submit"
                                         renderIcon={SendFilled}
                                         className="submit-btn"
-                                        disabled={!formData.destination.trim()}
+                                        disabled={!formData.destinations.some(d => d.trim())}
                                     >
                                         Generate My Trip Plan
                                     </Button>

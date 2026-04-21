@@ -1,127 +1,101 @@
 /* ═══════════════════════════════════════════════════════
-   Footer — Original Dark Design
+   Footer — Hyper-Fluid Dark Cosmic Design
    ═══════════════════════════════════════════════════════ */
 
-.footer {
-    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
-    color: #94a3b8;
-    padding: 4rem 3rem 2rem;
-    position: relative;
-    overflow: hidden;
+.hf-footer {
+  background: linear-gradient(180deg, transparent 0%, rgba(2, 6, 15, 0.95) 30%);
+  border-top: 1px solid rgba(64, 72, 93, 0.1);
+  padding: 4rem 3rem 2rem;
+  position: relative;
 }
 
-.footer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.5), transparent);
+.hf-footer__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.footer-content {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    gap: 3rem;
+@media (min-width: 768px) {
+  .hf-footer__grid {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
 }
 
-.footer-logo {
-    font-size: 1.5rem;
-    font-weight: 900;
-    background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.8) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 0.625rem;
-    letter-spacing: -0.02em;
+/* Brand Column */
+.hf-footer__brand-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #53ddfc;
+  font-family: 'Space Grotesk', sans-serif;
+  margin-bottom: 1rem;
 }
 
-.footer-tagline {
-    font-size: 0.9rem;
-    color: #64748b;
-    margin-bottom: 1rem;
+.hf-footer__brand-copy {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.8rem;
+  color: #475569;
+  letter-spacing: 0.05em;
 }
 
-.social-links {
-    display: flex;
-    gap: 0.75rem;
+/* Link Columns */
+.hf-footer__col-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
 }
 
-.social-link {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--planit-radius-md);
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.125rem;
-    text-decoration: none;
-    transition: all var(--planit-transition-base);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+.hf-footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.social-link:hover {
-    background: rgba(79, 70, 229, 0.25);
-    border-color: rgba(79, 70, 229, 0.4);
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+.hf-footer__link {
+  color: #475569;
+  text-decoration: none;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  transition: color 300ms ease, transform 300ms ease;
+  display: inline-block;
 }
 
-.footer-links {
-    display: flex;
-    gap: 3rem;
+.hf-footer__link:hover {
+  color: #ff86c3;
+  transform: translateX(4px);
+  opacity: 1;
 }
 
-.link-column {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
+/* ═══════════════════════════════════════════════════════
+   LIGHT THEME — Footer Overrides
+   ═══════════════════════════════════════════════════════ */
+
+.app--light .hf-footer {
+  background: linear-gradient(180deg, transparent 0%, rgba(241, 245, 249, 0.95) 30%);
+  border-color: rgba(0, 0, 0, 0.06);
 }
 
-.link-column h4 {
-    color: #fff;
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+.app--light .hf-footer__brand-name {
+  color: #4f46e5;
 }
 
-.link-column a {
-    color: #94a3b8;
-    text-decoration: none;
-    font-size: 0.85rem;
-    transition: color 0.2s;
+.app--light .hf-footer__brand-copy {
+  color: #94a3b8;
 }
 
-.link-column a:hover {
-    color: #e2e8f0;
+.app--light .hf-footer__col-title {
+  color: #1e1b4b;
 }
 
-.footer-bottom {
-    max-width: 1100px;
-    margin: 2rem auto 0;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    text-align: center;
-    font-size: 0.8rem;
-    color: #475569;
+.app--light .hf-footer__link {
+  color: #94a3b8;
 }
 
-@media (max-width: 700px) {
-    .footer {
-        padding: 2rem 1.5rem;
-    }
-
-    .footer-content {
-        flex-direction: column;
-        gap: 2rem;
-    }
-
-    .footer-links {
-        gap: 2rem;
-    }
+.app--light .hf-footer__link:hover {
+  color: #4f46e5;
 }

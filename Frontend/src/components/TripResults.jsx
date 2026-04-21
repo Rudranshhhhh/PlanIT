@@ -40,8 +40,12 @@ function getIcon(text) {
 }
 
 const TripResults = ({ tripData, tripResults, onPlanAnother }) => {
-    const { destination, days, start_date, budget, travelers, travel_style, interests } = tripData;
+    const { destinations, destination, days, start_date, budget, travelers, travel_style, interests } = tripData;
     const { itinerary, budget_analysis } = tripResults;
+
+    const destList = destinations || (destination ? [destination] : []);
+    const destString = destList.join(' ➔ ');
+    const primaryDest = destList[0] || '';
 
     const formatDate = (dateStr) => {
         if (!dateStr) return '';
@@ -73,7 +77,7 @@ const TripResults = ({ tripData, tripResults, onPlanAnother }) => {
                     <div className="results-hero-bg"></div>
                     <div className="results-hero-content">
                         <span className="results-emoji">🎉</span>
-                        <h1>Your Trip to {destination}</h1>
+                        <h1>Your Trip to {destString}</h1>
                         <div className="results-tags">
                             <Tag type="blue" size="md">📅 {days} Days</Tag>
                             {start_date && <Tag type="teal" size="md">🗓️ {formatDate(start_date)}</Tag>}
@@ -92,8 +96,8 @@ const TripResults = ({ tripData, tripResults, onPlanAnother }) => {
                 </div>
 
                 {/* Weather & Map */}
-                <WeatherWidget destination={destination} />
-                <TripMap destination={destination} />
+                <WeatherWidget destination={primaryDest} />
+                <TripMap destination={primaryDest} />
 
                 {/* Itinerary */}
                 <div className="itinerary-section">

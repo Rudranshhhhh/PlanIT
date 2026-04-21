@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     google_maps_api_key: str = ""
 
     class Config:
-        env_file = ".env"
+        env_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
         env_file_encoding = "utf-8"
         extra = "ignore"
 

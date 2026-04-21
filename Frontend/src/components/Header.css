@@ -1,129 +1,250 @@
-/* Header — Professional Glassmorphism Design */
-.planit-header.cds--header {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+/* ═══════════════════════════════════════════════════════
+   Floating Glass Pill Navbar — Hyper-Fluid Voyager
+   ═══════════════════════════════════════════════════════ */
+
+/* Outer wrapper — fixed, centered, with padding */
+.hf-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  padding: 1.25rem 1.5rem;
+  pointer-events: none;
 }
 
-.planit-header .cds--header__name {
-  color: var(--planit-accent);
-  font-weight: 800;
-  font-size: 1.375rem;
-  font-family: 'Inter', sans-serif;
-  letter-spacing: -0.02em;
-  transition: all var(--planit-transition-base);
-}
-
-.planit-header .cds--header__name:hover {
-  color: var(--planit-accent-hover);
-  transform: scale(1.02);
-}
-
-.planit-header .cds--header__nav .cds--header__menu-item {
-  color: var(--planit-gray-700);
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 0.9375rem;
-  padding: 0.625rem 1rem;
-  border-radius: var(--planit-radius-sm);
-  transition: all var(--planit-transition-base);
-  position: relative;
-}
-
-.planit-header .cds--header__nav .cds--header__menu-item::after {
-  content: '';
-  position: absolute;
-  bottom: 0.5rem;
-  left: 50%;
-  transform: translateX(-50%) scaleX(0);
-  width: 60%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--planit-accent), var(--planit-accent-hover));
-  border-radius: var(--planit-radius-full);
-  transition: transform var(--planit-transition-base);
-}
-
-.planit-header .cds--header__nav .cds--header__menu-item:hover {
-  color: var(--planit-accent);
-  background: rgba(79, 70, 229, 0.06);
-}
-
-.planit-header .cds--header__nav .cds--header__menu-item:hover::after {
-  transform: translateX(-50%) scaleX(1);
-}
-
-.planit-header .cds--header__action {
-  color: var(--planit-gray-700);
-  border-radius: var(--planit-radius-sm);
-  transition: all var(--planit-transition-base);
-  padding: 0.5rem;
-}
-
-.planit-header .cds--header__action:hover {
-  color: var(--planit-accent);
-  background: rgba(79, 70, 229, 0.08);
-  transform: scale(1.05);
-}
-
-/* ── Profile dropdown ─────────────────────────────── */
-.profile-menu-wrapper {
-  position: relative;
+/* The pill itself — glass effect */
+.hf-nav__pill {
+  pointer-events: all;
+  width: 100%;
+  max-width: 1200px;
+  background: rgba(6, 14, 32, 0.55);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  padding: 0.75rem 2rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(189, 157, 255, 0.05);
+  animation: hfNavSlideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.profile-dropdown {
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  right: 0;
-  min-width: 220px;
-  background: rgba(255, 255, 255, 0.97);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
-  padding: 0.5rem 0;
-  z-index: 9999;
-  animation: dropdownFadeIn 0.15s ease-out;
-}
-
-@keyframes dropdownFadeIn {
+@keyframes hfNavSlideDown {
   from {
     opacity: 0;
-    transform: translateY(-6px);
+    transform: translateY(-40px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.profile-dropdown-header {
+/* Brand */
+.hf-nav__brand {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 200ms ease;
+}
+
+.hf-nav__brand:hover {
+  opacity: 0.85;
+}
+
+/* Center Nav Links */
+.hf-nav__links {
+  display: none;
+  align-items: center;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .hf-nav__links {
+    display: flex;
+  }
+}
+
+.hf-nav__link {
+  color: #a3aac4;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 300ms ease;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+}
+
+.hf-nav__link:hover {
+  color: #ffffff;
+  opacity: 1;
+}
+
+.hf-nav__link--active {
+  color: #53ddfc;
+  font-weight: 700;
+  border-bottom-color: #53ddfc;
+}
+
+/* Right-side actions */
+.hf-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hf-nav__login-btn {
+  display: none;
+  color: #a3aac4;
+  background: none;
+  border: none;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.4rem 0.75rem;
+  transition: color 300ms ease;
+}
+
+@media (min-width: 640px) {
+  .hf-nav__login-btn {
+    display: block;
+  }
+}
+
+.hf-nav__login-btn:hover {
+  color: #ffffff;
+}
+
+.hf-nav__signup-btn {
+  background: linear-gradient(135deg, #bd9dff, #8a4cfc);
+  color: #060e20;
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(189, 157, 255, 0.3);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.hf-nav__signup-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(189, 157, 255, 0.5);
+}
+
+.hf-nav__signup-btn:active {
+  transform: scale(0.95);
+}
+
+/* ── Profile button (logged in) ───────────────────── */
+.hf-nav__avatar-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(189, 157, 255, 0.12);
+  border: 1px solid rgba(189, 157, 255, 0.2);
+  border-radius: 9999px;
+  padding: 0.4rem 1rem 0.4rem 0.6rem;
+  color: #dee5ff;
+  cursor: pointer;
+  transition: all 200ms ease;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.hf-nav__avatar-btn:hover {
+  background: rgba(189, 157, 255, 0.2);
+  border-color: rgba(189, 157, 255, 0.35);
+}
+
+.hf-nav__avatar-btn svg {
+  fill: #bd9dff;
+}
+
+.hf-nav__user-name {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .hf-nav__user-name {
+    display: inline;
+  }
+}
+
+/* ── Profile Dropdown ─────────────────────────────── */
+.hf-nav__profile {
+  position: relative;
+}
+
+.hf-nav__dropdown {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  right: 0;
+  min-width: 220px;
+  background: rgba(15, 25, 48, 0.95);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(64, 72, 93, 0.3);
+  border-radius: 1rem;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(189, 157, 255, 0.08);
+  padding: 0.5rem 0;
+  z-index: 9999;
+  animation: hfDropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes hfDropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hf-nav__dropdown-header {
   display: flex;
   align-items: center;
   gap: 0.625rem;
   padding: 0.75rem 1rem;
 }
 
-.profile-dropdown-name {
+.hf-nav__dropdown-header svg {
+  fill: #bd9dff;
+}
+
+.hf-nav__dropdown-name {
   font-weight: 600;
   font-size: 0.9375rem;
-  color: #1e293b;
+  color: #dee5ff;
   letter-spacing: -0.01em;
 }
 
-.profile-dropdown-divider {
+.hf-nav__dropdown-divider {
   height: 1px;
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(64, 72, 93, 0.3);
   margin: 0.25rem 0;
 }
 
-.profile-dropdown-item {
+.hf-nav__dropdown-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -131,23 +252,149 @@
   padding: 0.6rem 1rem;
   border: none;
   background: none;
-  color: #334155;
+  color: #a3aac4;
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s ease;
-  font-family: inherit;
+  transition: background 150ms ease, color 150ms ease;
+  font-family: 'Manrope', sans-serif;
   text-align: left;
 }
 
-.profile-dropdown-item:hover {
-  background: rgba(0, 0, 0, 0.04);
+.hf-nav__dropdown-item:hover {
+  background: rgba(189, 157, 255, 0.08);
+  color: #dee5ff;
 }
 
-.profile-dropdown-logout {
-  color: #dc2626;
+.hf-nav__dropdown-logout {
+  color: #ff6e84;
 }
 
-.profile-dropdown-logout:hover {
-  background: rgba(220, 38, 38, 0.06);
+.hf-nav__dropdown-logout:hover {
+  background: rgba(255, 110, 132, 0.1);
+  color: #ff6e84;
+}
+
+/* ═══════════════════════════════════════════════════════
+   Theme Toggle Button
+   ═══════════════════════════════════════════════════════ */
+
+.hf-nav__theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: rgba(189, 157, 255, 0.1);
+  border: 1px solid rgba(189, 157, 255, 0.2);
+  color: #bd9dff;
+  cursor: pointer;
+  transition: all 250ms ease;
+  padding: 0;
+}
+
+.hf-nav__theme-toggle .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.hf-nav__theme-toggle:hover {
+  background: rgba(189, 157, 255, 0.2);
+  border-color: rgba(189, 157, 255, 0.4);
+  transform: rotate(20deg) scale(1.1);
+}
+
+/* ═══════════════════════════════════════════════════════
+   LIGHT THEME — Navbar Overrides
+   ═══════════════════════════════════════════════════════ */
+
+.hf-nav--light .hf-nav__pill {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.hf-nav--light .hf-nav__brand {
+  color: #1e1b4b;
+}
+
+.hf-nav--light .hf-nav__link {
+  color: #64748b;
+}
+
+.hf-nav--light .hf-nav__link:hover {
+  color: #1e1b4b;
+}
+
+.hf-nav--light .hf-nav__link--active {
+  color: #4f46e5;
+  border-bottom-color: #4f46e5;
+}
+
+.hf-nav--light .hf-nav__login-btn {
+  color: #64748b;
+}
+
+.hf-nav--light .hf-nav__login-btn:hover {
+  color: #1e1b4b;
+}
+
+.hf-nav--light .hf-nav__signup-btn {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+}
+
+.hf-nav--light .hf-nav__theme-toggle {
+  background: rgba(79, 70, 229, 0.08);
+  border-color: rgba(79, 70, 229, 0.15);
+  color: #4f46e5;
+}
+
+.hf-nav--light .hf-nav__theme-toggle:hover {
+  background: rgba(79, 70, 229, 0.15);
+  border-color: rgba(79, 70, 229, 0.3);
+}
+
+.hf-nav--light .hf-nav__avatar-btn {
+  background: rgba(79, 70, 229, 0.08);
+  border-color: rgba(79, 70, 229, 0.15);
+  color: #1e1b4b;
+}
+
+.hf-nav--light .hf-nav__avatar-btn:hover {
+  background: rgba(79, 70, 229, 0.15);
+}
+
+.hf-nav--light .hf-nav__avatar-btn svg {
+  fill: #4f46e5;
+}
+
+.hf-nav--light .hf-nav__dropdown {
+  background: rgba(255, 255, 255, 0.97);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.hf-nav--light .hf-nav__dropdown-name {
+  color: #1e1b4b;
+}
+
+.hf-nav--light .hf-nav__dropdown-header svg {
+  fill: #4f46e5;
+}
+
+.hf-nav--light .hf-nav__dropdown-divider {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.hf-nav--light .hf-nav__dropdown-item {
+  color: #475569;
+}
+
+.hf-nav--light .hf-nav__dropdown-item:hover {
+  background: rgba(79, 70, 229, 0.06);
+  color: #1e1b4b;
 }

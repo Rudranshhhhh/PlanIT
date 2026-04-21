@@ -1,46 +1,48 @@
-import { Link } from '@carbon/react';
 import './Footer.css';
 
 const Footer = () => {
-    return (
-        <footer className="footer">
-            <div className="footer-content">
-                <div className="footer-brand">
-                    <h3 className="footer-logo">Plan-IT</h3>
-                    <p className="footer-tagline">Your intelligent travel companion.</p>
-                    <div className="social-links">
-                        <a href="#" className="social-link">𝕏</a>
-                        <a href="#" className="social-link">📸</a>
-                        <a href="#" className="social-link">📘</a>
-                    </div>
-                </div>
+  return (
+    <footer className="hf-footer">
+      <div className="hf-footer__grid">
+        {/* Brand */}
+        <div>
+          <div className="hf-footer__brand-name">Plan-IT</div>
+          <p className="hf-footer__brand-copy">
+            © {new Date().getFullYear()} Plan-IT. Hyper-Fluid Discovery for the Next Gen.
+          </p>
+        </div>
 
-                <div className="footer-links">
-                    <div className="link-column">
-                        <h4>Product</h4>
-                        <a href="#">Features</a>
-                        <a href="#">Pricing</a>
-                        <a href="#">Showcase</a>
-                    </div>
-                    <div className="link-column">
-                        <h4>Company</h4>
-                        <a href="#">About</a>
-                        <a href="#">Careers</a>
-                        <a href="#">Blog</a>
-                    </div>
-                    <div className="link-column">
-                        <h4>Resources</h4>
-                        <a href="#">Community</a>
-                        <a href="#">Help Center</a>
-                        <a href="#">Terms</a>
-                    </div>
-                </div>
-            </div>
-            <div className="footer-bottom">
-                <p>&copy; {new Date().getFullYear()} Plan-IT Technologies. All rights reserved.</p>
-            </div>
-        </footer>
-    );
+        {/* Platform */}
+        <div>
+          <h4 className="hf-footer__col-title">Platform</h4>
+          <div className="hf-footer__links">
+            <a href="#" className="hf-footer__link">Features</a>
+            <a href="#" className="hf-footer__link">Pricing</a>
+            <a href="#" className="hf-footer__link">AI Agents</a>
+          </div>
+        </div>
+
+        {/* Legal */}
+        <div>
+          <h4 className="hf-footer__col-title">Legal</h4>
+          <div className="hf-footer__links">
+            <a href="#" className="hf-footer__link">Terms</a>
+            <a href="#" className="hf-footer__link">Privacy</a>
+          </div>
+        </div>
+
+        {/* Connect */}
+        <div>
+          <h4 className="hf-footer__col-title">Connect</h4>
+          <div className="hf-footer__links">
+            <a href="#" className="hf-footer__link">Contact</a>
+            <a href="#" className="hf-footer__link">Instagram</a>
+            <a href="#" className="hf-footer__link">Discord</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
 };
 
 export default Footer;

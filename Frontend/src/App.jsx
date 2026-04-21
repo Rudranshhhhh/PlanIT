@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { Button } from '@carbon/react';
-import { ArrowRight } from '@carbon/icons-react';
 import ChatBox from './components/ChatBox';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import HomePage from './components/HomePage';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import TripPlanner from './components/TripPlanner';
 import TripResults from './components/TripResults';
-import SplitText from './SplitText';
 import './App.css';
 
 function App() {
@@ -25,6 +24,21 @@ function App() {
   const [userName, setUserName] = useState(savedUser?.name || '');
   const [tripData, setTripData] = useState(null);
   const [tripResults, setTripResults] = useState(null);
+
+  // Theme state — persisted in localStorage
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem('planit_theme') || 'dark';
+    } catch { return 'dark'; }
+  });
+
+  const toggleTheme = () => {
+    setTheme((prev) => {
+      const next = prev === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('planit_theme', next);
+      return next;
+    });
+  };
 
   const navigate = (view) => {
     setCurrentView(view);
@@ -50,6 +64,8 @@ function App() {
     setTripResults(results);
     navigate('results');
   };
+
+  const isHomePage = currentView === 'home';
 
   const renderView = () => {
     switch (currentView) {
@@ -81,84 +97,16 @@ function App() {
         );
       case 'home':
       default:
-        return (
-          <header className="hero">
-            <div className="hero-glow"></div>
-            <div className="hero-inner">
-              <div className="hero-content">
-                <h1 className="hero-title">
-                  <SplitText
-                    text="Plan-IT"
-                    delay={50}
-                    duration={1.25}
-                    ease="ease-out"
-                    splitType="chars"
-                    from={{ opacity: 0, y: 40 }}
-                    to={{ opacity: 1, y: 0 }}
-                    threshold={0.1}
-                    rootMargin="-100px"
-                    textAlign="left"
-                    showCallback={false}
-                  />
-                  <span className="hero-highlight">Intelligent Planning</span>
-                </h1>
-                <p className="hero-sub">
-                  Experience the future of travel planning.
-                  Fill a form, get a complete AI-powered itinerary in seconds.
-                </p>
-                <div className="hero-buttons">
-                  <Button
-                    size="lg"
-                    onClick={() => navigate(isLoggedIn ? 'planner' : 'signup')}
-                    className="hero-cta"
-                  >
-                    Get Started Free
-                  </Button>
-                  {!isLoggedIn && (
-                    <button className="btn-secondary" onClick={() => navigate('login')}>
-                      Existing User?
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <aside className="hero-aside" aria-label="Key features">
-                <div className="cards-grid">
-                  <div className="feature-card card-1">
-                    <span className="feature-icon">✨</span>
-                    <div className="feature-text">
-                      <h3>AI Powered</h3>
-                      <p>Smart itinerary generation with LLMs</p>
-                    </div>
-                  </div>
-                  <div className="feature-card card-2">
-                    <span className="feature-icon">🗺️</span>
-                    <div className="feature-text">
-                      <h3>Smart Forms</h3>
-                      <p>Plan trips with simple structured inputs</p>
-                    </div>
-                  </div>
-                  <div className="feature-card card-3">
-                    <span className="feature-icon">🌍</span>
-                    <div className="feature-text">
-                      <h3>Global Search</h3>
-                      <p>Real-time info for any destination</p>
-                    </div>
-                  </div>
-                </div>
-              </aside>
-            </div>
-          </header>
-        );
+        return <HomePage onNavigate={navigate} isLoggedIn={isLoggedIn} theme={theme} />;
     }
   };
 
   return (
-    <div className="app">
-      <Header onNavigate={navigate} isLoggedIn={isLoggedIn} userName={userName} onLogout={handleLogout} />
+    <div className={`app ${isHomePage ? `app--${theme}` : ''}`}>
+      <Header onNavigate={navigate} isLoggedIn={isLoggedIn} userName={userName} onLogout={handleLogout} isHomePage={isHomePage} theme={theme} onToggleTheme={toggleTheme} />
       <div className="app-container">
         {renderView()}
-        {currentView === 'home' && <Footer />}
+        {isHomePage && <Footer />}
       </div>
     </div>
   );

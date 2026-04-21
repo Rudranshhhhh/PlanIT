@@ -210,7 +210,12 @@ def plan_trip():
     """Generate a trip plan from structured form data."""
     data = request.get_json()
 
-    destination = data.get("destination", "")
+    destinations = data.get("destinations", [])
+    if not destinations and data.get("destination"):
+        destinations = [data.get("destination")]
+    elif not destinations:
+        destinations = []
+
     days = data.get("days", 3)
     start_date = data.get("start_date", "")
     budget = data.get("budget", 0)
@@ -218,13 +223,16 @@ def plan_trip():
     travel_style = data.get("travel_style", "moderate")
     interests = data.get("interests", [])
 
-    if not destination:
-        return jsonify({"error": "Destination is required"}), 400
+    valid_destinations = [d for d in destinations if d.strip()]
+    if not valid_destinations:
+        return jsonify({"error": "At least one destination is required"}), 400
+
+    destination_str = " ➔ ".join(valid_destinations)
 
     # Build a natural-language prompt from the structured inputs
     interests_str = ", ".join(interests) if interests else "general sightseeing"
     prompt = (
-        f"Plan a detailed {days}-day trip to {destination} "
+        f"Plan a detailed {days}-day trip progressing through {destination_str} "
         f"for {travelers} traveler{'s' if travelers > 1 else ''}. "
     )
     if start_date:
@@ -248,7 +256,7 @@ def plan_trip():
             "preferences": result.get("preferences", {}),
             "budget_analysis": result.get("budget_analysis", {}),
             "input": {
-                "destination": destination,
+                "destinations": valid_destinations,
                 "days": days,
                 "start_date": start_date,
                 "budget": budget,
